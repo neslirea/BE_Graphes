@@ -14,7 +14,7 @@ public abstract class AbstractInputData {
 
     /**
      * Enum specifying the top mode of the algorithms.
-     * 
+     * AbstractInputData
      * @see ArcInspector
      */
     public enum Mode {
