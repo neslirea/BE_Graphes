@@ -52,21 +52,23 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         	node.setMarque(true);
         	// Pour tous les successeurs
         	for(Arc n : graph.get(node.getSommet()).getSuccessors()) {
-        		int y = n.getDestination().getId();
-        		Label ly = labels.get(y);
-
-        		// Si le sommet n'est pas marqué
-        		if(!ly.getMarque()) {
-        			float new_cout = (node.getCost()+n.getLength());   
-        			// On doit mettre à jour le sommet
-        			if(ly.getCost()>new_cout) {
-        				if(ly.getCost()!=infini)
-        					tas_labels.remove(ly);
-        				ly.setCost(new_cout);  
-        				tas_labels.insert(ly);
-        				ly.setPere(n);
-        			}
-	        	}
+        		if (data.isAllowed(n)) {
+	        		int y = n.getDestination().getId();
+	        		Label ly = labels.get(y);
+	
+	        		// Si le sommet n'est pas marqué
+	        		if(!ly.getMarque()) {
+	        			float new_cout = (node.getCost()+n.getLength());   
+	        			// On doit mettre à jour le sommet
+	        			if(ly.getCost()>new_cout) {
+	        				if(ly.getCost()!=infini)
+	        					tas_labels.remove(ly);
+	        				ly.setCost(new_cout);  
+	        				tas_labels.insert(ly);
+	        				ly.setPere(n);
+	        			}
+		        	}
+        		}
         		
         	}
         	// On vérifie que la liste ne soit pas vide avant de tenter l'extraction
