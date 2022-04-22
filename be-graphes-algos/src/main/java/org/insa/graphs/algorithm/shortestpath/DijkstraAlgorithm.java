@@ -42,6 +42,9 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         }
         labels.get(origin).setCost(0);
         
+        //Observer
+        super.notifyOriginProcessed(graph.get(origin));
+        
         BinaryHeap<Node> nodes = new BinaryHeap<>();
         nodes.insert(graph.get(data.getOrigin().getId()));
         
@@ -58,11 +61,15 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 	
 	        		// Si le sommet n'est pas marqué
 	        		if(!ly.getMarque()) {
-	        			float new_cout = (node.getCost()+n.getLength());   
+	        			float new_cout = (float) (node.getCost()+data.getCost(n));   
 	        			// On doit mettre à jour le sommet
 	        			if(ly.getCost()>new_cout) {
-	        				if(ly.getCost()!=infini)
+	        				if(ly.getCost()!=Float.MAX_VALUE)
 	        					tas_labels.remove(ly);
+	        				else {
+	    	        			//Observer
+	    	    	            super.notifyNodeReached(graph.get(ly.getSommet()));
+	        				}
 	        				ly.setCost(new_cout);  
 	        				tas_labels.insert(ly);
 	        				ly.setPere(n);
@@ -74,6 +81,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         	// On vérifie que la liste ne soit pas vide avant de tenter l'extraction
 	        if(tas_labels.size()>0) {	        	
 	        	node = tas_labels.deleteMin();
+	            //Observer
+	            super.notifyNodeMarked(graph.get(node.getSommet()));
 	        }
 	        else
 	        	node = null;
@@ -81,20 +90,22 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         }
         
         if (labels.get(destination).getMarque()) {
+    		//Observer
+            super.notifyDestinationReached(graph.get(destination));
             // CONSTRUCTION DE LA SOLUTION
-            List<Node> noeuds = new ArrayList<>();
+            List<Arc> arcs = new ArrayList<>();
             Label courant = labels.get(destination);
             // On reconstruit le chemin
             while(courant.getSommet()!=origin) {
             	Node noeud = graph.get(courant.getSommet());
-            	noeuds.add(noeud);
+            	arcs.add(courant.getPere());
             	courant = labels.get(courant.getPere().getOrigin().getId());
             }
-        	noeuds.add(graph.get(courant.getSommet()));
+        	//noeuds.add(graph.get(courant.getSommet()));
             
         	//On oublie pas d'inverser pour 
-        	Collections.reverse(noeuds);
-        	Path chemin = Path.createShortestPathFromNodes(graph, noeuds);
+        	Collections.reverse(arcs);
+        	Path chemin = new Path(graph, arcs);
         	
         	solution = new ShortestPathSolution(data, AbstractSolution.Status.FEASIBLE, chemin);
         } else {
