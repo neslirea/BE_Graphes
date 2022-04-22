@@ -2,10 +2,11 @@ package org.insa.graphs.algorithm.shortestpath;
 
 import org.insa.graphs.algorithm.AbstractInputData.Mode;
 import org.insa.graphs.model.Arc;
+import org.insa.graphs.model.Label;
 import org.insa.graphs.model.Path;
 import org.insa.graphs.algorithm.AbstractSolution;
 
-public class ShortestPathSolution extends AbstractSolution {
+public class ShortestPathSolution extends AbstractSolution implements Comparable<ShortestPathSolution>{
 
     // Optimal solution.
     private final Path path;
@@ -70,5 +71,20 @@ public class ShortestPathSolution extends AbstractSolution {
         info += " in " + getSolvingTime().getSeconds() + " seconds.";
         return info;
     }
+
+	@Override
+	public int compareTo(ShortestPathSolution arg0) {
+		int res = 0;
+		Path path1 = this.getPath();
+		Path path2 = arg0.getPath();
+		if(path1.size()!=path2.size()
+				||Float.compare(path1.getLength(),path2.getLength())==0
+				||Double.compare(path1.getMinimumTravelTime(),path2.getMinimumTravelTime())==0
+				||this.getStatus()!=arg0.getStatus()
+				) {
+			res = -1;
+		} 		
+		return res;
+	}
 
 }

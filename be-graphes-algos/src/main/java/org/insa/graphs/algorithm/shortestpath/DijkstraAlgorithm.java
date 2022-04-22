@@ -43,15 +43,14 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         labels.get(origin).setCost(0);
         
         //Observer
-        super.notifyOriginProcessed(graph.get(origin));
+        this.notifyOriginProcessed(graph.get(origin));
         
         BinaryHeap<Node> nodes = new BinaryHeap<>();
         nodes.insert(graph.get(data.getOrigin().getId()));
         
         // TRAITEMENT
-        boolean existe_chemin = true;
         Label node = labels.get(origin);
-        while(node!=null&&existe_chemin) {
+        while(node!=null&&!(labels.get(destination).getMarque())) {
         	node.setMarque(true);
         	// Pour tous les successeurs
         	for(Arc n : graph.get(node.getSommet()).getSuccessors()) {
@@ -64,11 +63,12 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 	        			float new_cout = (float) (node.getCost()+data.getCost(n));   
 	        			// On doit mettre à jour le sommet
 	        			if(ly.getCost()>new_cout) {
-	        				if(ly.getCost()!=Float.MAX_VALUE)
+	        				if(ly.getCost()!=Float.MAX_VALUE) {
 	        					tas_labels.remove(ly);
+	        				}
 	        				else {
 	    	        			//Observer
-	    	    	            super.notifyNodeReached(graph.get(ly.getSommet()));
+	    	    	            this.notifyNodeReached(graph.get(ly.getSommet()));
 	        				}
 	        				ly.setCost(new_cout);  
 	        				tas_labels.insert(ly);
@@ -82,7 +82,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 	        if(tas_labels.size()>0) {	        	
 	        	node = tas_labels.deleteMin();
 	            //Observer
-	            super.notifyNodeMarked(graph.get(node.getSommet()));
+	        	this.notifyNodeMarked(graph.get(node.getSommet()));
+	            //System.out.println(node.getCost());
 	        }
 	        else
 	        	node = null;
@@ -91,7 +92,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         
         if (labels.get(destination).getMarque()) {
     		//Observer
-            super.notifyDestinationReached(graph.get(destination));
+        	this.notifyDestinationReached(graph.get(destination));
             // CONSTRUCTION DE LA SOLUTION
             List<Arc> arcs = new ArrayList<>();
             Label courant = labels.get(destination);
