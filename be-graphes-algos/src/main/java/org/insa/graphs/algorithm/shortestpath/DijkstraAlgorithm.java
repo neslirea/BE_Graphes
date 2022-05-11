@@ -108,12 +108,13 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         	Collections.reverse(arcs);
         	Path chemin = new Path(graph, arcs);
         	
-        	solution = new ShortestPathSolution(data, AbstractSolution.Status.FEASIBLE, chemin);
+        	solution = new ShortestPathSolution(data, AbstractSolution.Status.OPTIMAL, chemin);
+        	
         } else {
         	solution = new ShortestPathSolution(data, Status.INFEASIBLE);
         }
         
-
+        
     	
     	
     	

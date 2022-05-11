@@ -51,32 +51,30 @@ public class DijkstraAlgorithmTest {
 		        Node destination = graph.get((int)(Math.random() * (graph.size()+ 1)));		               
 		        
 		        
+		        
 		        DijkstraAlgorithm da = new DijkstraAlgorithm(new ShortestPathData(graph, origin, destination, ai));	        
 		        BellmanFordAlgorithm ba = new BellmanFordAlgorithm(new ShortestPathData(graph, origin, destination, ai));
-		        da.run();
-		        ba.run();
 		        
-		        assertEquals(ba.doRun(), da.doRun());
+
+		        if (origin.getId()!=destination.getId())
+		        	assertTrue(ba.run().compareTo(da.run())==0);
 		        
-		        da = new DijkstraAlgorithm(new ShortestPathData(graph, origin, origin, ai));	        
-		        ba = new BellmanFordAlgorithm(new ShortestPathData(graph, origin, origin, ai));
-		        da.run();
-		        ba.run();
-		        assertEquals(ba.doRun(), da.doRun());
 	        }
 
 
         }
 		catch(Exception e) {
+			System.out.println("court : "+e.toString());
+			e.printStackTrace();
 			
-		}
+		} 
 	}
 		
 	@Test
 	public void testCheminNull() {
 		try {
 	        // Visit these directory to see the list of available files on Commetud.
-	        final String mapName = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/toulouse.mapgr";
+	        final String mapName = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
 	
 	        // Create a graph reader.
 	        final GraphReader reader = new BinaryGraphReader(
@@ -87,18 +85,18 @@ public class DijkstraAlgorithmTest {
 
 	        ArcInspector ai = ArcInspectorFactory.getAllFilters().get(0);
     		
-	        Node origin = graph.get((int)(Math.random() * (graph.size()+ 1)));
+	        Node origin = graph.get(71);
+	        Node destination = graph.get(1026);
 	        
 	        
-	        DijkstraAlgorithm da = new DijkstraAlgorithm(new ShortestPathData(graph, origin, origin, ai));	        
-	        BellmanFordAlgorithm ba = new BellmanFordAlgorithm(new ShortestPathData(graph, origin, origin, ai));
-	        da.run();
-	        ba.run();
+	        DijkstraAlgorithm da = new DijkstraAlgorithm(new ShortestPathData(graph, origin, destination, ai));	        
+	        BellmanFordAlgorithm ba = new BellmanFordAlgorithm(new ShortestPathData(graph, origin, destination, ai));
 	        
-	        assertEquals(ba.doRun(), da.doRun());
+	        assertTrue(ba.run().compareTo(da.run())==0);
 	     
         }
 		catch(Exception e) {
+			System.out.println("null : "+e.toString());
 			
 		}
 	}
@@ -124,13 +122,12 @@ public class DijkstraAlgorithmTest {
 	        
 	        DijkstraAlgorithm da = new DijkstraAlgorithm(new ShortestPathData(graph, origin, destination, ai));	        
 	        BellmanFordAlgorithm ba = new BellmanFordAlgorithm(new ShortestPathData(graph, origin, destination, ai));
-	        da.run();
-	        ba.run();
 	        
-	        assertEquals(ba.doRun(), da.doRun());
+	        assertTrue(ba.run().compareTo(da.run())==0);
 	     
         }
 		catch(Exception e) {
+			System.out.println("inexistant : "+e.toString());
 			
 		}
 	}
@@ -151,27 +148,28 @@ public class DijkstraAlgorithmTest {
 	
 	        // Read the graph.
 	        final Graph graph = reader.read();	
-	        ArcInspector ai_fast = ArcInspectorFactory.getAllFilters().get(0);
-	        ArcInspector ai_short = ArcInspectorFactory.getAllFilters().get(2);
+	        ArcInspector ai_short = ArcInspectorFactory.getAllFilters().get(0);
+	        ArcInspector ai_fast = ArcInspectorFactory.getAllFilters().get(2);
     		
 	        Node origin = graph.get((int)(Math.random() * (graph.size()+ 1)));
 	        Node destination = graph.get((int)(Math.random() * (graph.size()+ 1)));		               
 	        
 	        
 	        DijkstraAlgorithm da_fast = new DijkstraAlgorithm(new ShortestPathData(graph, origin, destination, ai_fast));	   
-	        DijkstraAlgorithm da_short = new DijkstraAlgorithm(new ShortestPathData(graph, origin, destination, ai_short));	          
-	        ShortestPathSolution sol_fast = da_fast.doRun();
-	        ShortestPathSolution sol_short = da_short.doRun();
+	        DijkstraAlgorithm da_short = new DijkstraAlgorithm(new ShortestPathData(graph, origin, destination, ai_short));	     
+	        
+	        ShortestPathSolution sol_fast = da_fast.run();
+	        ShortestPathSolution sol_short = da_short.run();
 	        if (sol_fast.isFeasible()){
-		        assertTrue(sol_fast.getPath().getLength()>sol_short.getPath().getLength() );
-		        assertTrue(sol_fast.getPath().getMinimumTravelTime()<sol_short.getPath().getMinimumTravelTime());	        	
+		        assertTrue(sol_fast.getPath().getLength()>=sol_short.getPath().getLength() );
+		        assertTrue(sol_fast.getPath().getMinimumTravelTime()<=sol_short.getPath().getMinimumTravelTime());	        	
 	        }
 	        
 
 
         }
 		catch(Exception e) {
-			
+			System.out.println("long : "+e.toString());
 		}
 	}
 

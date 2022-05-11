@@ -77,13 +77,21 @@ public class ShortestPathSolution extends AbstractSolution implements Comparable
 		int res = 0;
 		Path path1 = this.getPath();
 		Path path2 = arg0.getPath();
-		if(path1.size()!=path2.size()
+		if(path1==null||path2==null) {
+			if(this.getStatus()!=arg0.getStatus()) {
+				res = -1;
+			} else {
+				res = 0;
+			}
+		} else if(Integer.compare(path1.size(), path2.size())==0
 				||Float.compare(path1.getLength(),path2.getLength())==0
 				||Double.compare(path1.getMinimumTravelTime(),path2.getMinimumTravelTime())==0
-				||this.getStatus()!=arg0.getStatus()
+				||this.getStatus()==arg0.getStatus()
 				) {
+			res = 0;
+		} else {
 			res = -1;
-		} 		
+		}
 		return res;
 	}
 
