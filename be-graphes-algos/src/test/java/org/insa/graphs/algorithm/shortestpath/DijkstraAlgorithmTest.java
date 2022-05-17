@@ -10,6 +10,7 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.util.List;
 
+import org.insa.graphs.algorithm.AbstractSolution.Status;
 import org.insa.graphs.algorithm.ArcInspector;
 import org.insa.graphs.algorithm.ArcInspectorFactory;
 import org.insa.graphs.model.Graph;
@@ -27,6 +28,11 @@ import org.junit.Test;
  */
 public class DijkstraAlgorithmTest {
 
+	
+	protected ShortestPathAlgorithm CreateAlgorithm (ShortestPathData data) {
+		return new DijkstraAlgorithm(data);
+	}
+	
 	/**
 	 * Test method for {@link org.insa.graphs.algorithm.shortestpath.DijkstraAlgorithm#DijkstraAlgorithm(org.insa.graphs.algorithm.shortestpath.ShortestPathData)}.
 	 */
@@ -52,7 +58,7 @@ public class DijkstraAlgorithmTest {
 		        
 		        
 		        
-		        DijkstraAlgorithm da = new DijkstraAlgorithm(new ShortestPathData(graph, origin, destination, ai));	        
+		        ShortestPathAlgorithm da = CreateAlgorithm(new ShortestPathData(graph, origin, destination, ai));	        
 		        BellmanFordAlgorithm ba = new BellmanFordAlgorithm(new ShortestPathData(graph, origin, destination, ai));
 		        
 
@@ -86,13 +92,12 @@ public class DijkstraAlgorithmTest {
 	        ArcInspector ai = ArcInspectorFactory.getAllFilters().get(0);
     		
 	        Node origin = graph.get(71);
-	        Node destination = graph.get(1026);
+	        Node destination = origin;
 	        
 	        
-	        DijkstraAlgorithm da = new DijkstraAlgorithm(new ShortestPathData(graph, origin, destination, ai));	        
-	        BellmanFordAlgorithm ba = new BellmanFordAlgorithm(new ShortestPathData(graph, origin, destination, ai));
-	        
-	        assertTrue(ba.run().compareTo(da.run())==0);
+	        ShortestPathAlgorithm da = CreateAlgorithm(new ShortestPathData(graph, origin, destination, ai));	       
+	        assertEquals(da.run().getStatus(),Status.OPTIMAL);      
+	        assertEquals(da.run().getPath().size(),0);  
 	     
         }
 		catch(Exception e) {
@@ -120,7 +125,7 @@ public class DijkstraAlgorithmTest {
 	        Node destination = graph.get((int)1283);		               
 	        
 	        
-	        DijkstraAlgorithm da = new DijkstraAlgorithm(new ShortestPathData(graph, origin, destination, ai));	        
+	        ShortestPathAlgorithm da = CreateAlgorithm(new ShortestPathData(graph, origin, destination, ai));	        
 	        BellmanFordAlgorithm ba = new BellmanFordAlgorithm(new ShortestPathData(graph, origin, destination, ai));
 	        
 	        assertTrue(ba.run().compareTo(da.run())==0);
@@ -140,7 +145,7 @@ public class DijkstraAlgorithmTest {
 	public void testCheminLong() {
 		try {
 	        // Visit these directory to see the list of available files on Commetud.
-	        final String mapName = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/madagascar.mapgr";
+	        final String mapName = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/haute-garonne.mapgr";
 	
 	        // Create a graph reader.
 	        final GraphReader reader = new BinaryGraphReader(
@@ -155,13 +160,15 @@ public class DijkstraAlgorithmTest {
 	        Node destination = graph.get((int)(Math.random() * (graph.size()+ 1)));		               
 	        
 	        
-	        DijkstraAlgorithm da_fast = new DijkstraAlgorithm(new ShortestPathData(graph, origin, destination, ai_fast));	   
-	        DijkstraAlgorithm da_short = new DijkstraAlgorithm(new ShortestPathData(graph, origin, destination, ai_short));	     
+	        ShortestPathAlgorithm da_fast = CreateAlgorithm(new ShortestPathData(graph, origin, destination, ai_fast));	   
+	        ShortestPathAlgorithm da_short = CreateAlgorithm(new ShortestPathData(graph, origin, destination, ai_short));	     
 	        
 	        ShortestPathSolution sol_fast = da_fast.run();
 	        ShortestPathSolution sol_short = da_short.run();
 	        if (sol_fast.isFeasible()){
 		        assertTrue(sol_fast.getPath().getLength()>=sol_short.getPath().getLength() );
+		        System.out.println(origin.getId()+":"+destination.getId());
+		        System.out.println(sol_fast.getPath().getMinimumTravelTime()+":"+sol_short.getPath().getMinimumTravelTime());
 		        assertTrue(sol_fast.getPath().getMinimumTravelTime()<=sol_short.getPath().getMinimumTravelTime());	        	
 	        }
 	        

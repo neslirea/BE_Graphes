@@ -52,9 +52,12 @@ public class Label implements Comparable<Label>{
 		return this.pere;
 	}
 
+	protected float getTotalCost() {
+		return this.cout;
+	}
 	@Override
 	public int compareTo(Label arg0) {		
-		return Float.compare(this.cout,arg0.cout);
+		return Float.compare(this.getTotalCost(),arg0.getTotalCost());
 	}
 
 }

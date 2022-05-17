@@ -21,6 +21,11 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
     public DijkstraAlgorithm(ShortestPathData data) {
         super(data);
     }
+    
+    protected Label createLabel(int i) {
+        float infini = Float.MAX_VALUE;
+    	return new Label(i, false, infini, null);
+    }
 
     @Override
     protected ShortestPathSolution doRun() {
@@ -34,11 +39,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         
         labels = new ArrayList<>();
         tas_labels = new BinaryHeap<>();
-        float infini = Float.MAX_VALUE;
         
         // INITIALISATION
         for(int i=0; i<nbNodes; i++) {
-        	labels.add(new Label(i, false, infini, null));
+        	labels.add(createLabel(i));
         }
         labels.get(origin).setCost(0);
         
