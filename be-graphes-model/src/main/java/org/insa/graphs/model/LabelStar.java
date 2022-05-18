@@ -11,12 +11,23 @@ public class LabelStar extends Label{
 		super(sommet_courant, marque, cout, pere);
 		this.cout_estime_destination = cout_estime_destination;
 	}
-	
-
+	private float getCoutDestination() {		
+		return cout_estime_destination;
+	}
 
 	@Override
 	public float getTotalCost() {		
 		return this.getCost() + cout_estime_destination;
+	}
+	@Override
+	public int compareTo(Label arg0) {		
+		
+		int res = Float.compare(this.getTotalCost(),arg0.getTotalCost());
+		if(res==0&&arg0 instanceof LabelStar) {
+			res = Float.compare(this.cout_estime_destination, ((LabelStar) arg0).getCoutDestination());				
+		
+		}
+		return res;
 	}
 
 }
