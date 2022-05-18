@@ -165,6 +165,9 @@ public class DijkstraAlgorithmTest {
 	        
 	        ShortestPathSolution sol_fast = da_fast.run();
 	        ShortestPathSolution sol_short = da_short.run();
+	        
+	        assertEquals(sol_fast.isFeasible(), sol_short.isFeasible());  
+	        
 	        if (sol_fast.isFeasible()){
 		        assertTrue(sol_fast.getPath().getLength()>=sol_short.getPath().getLength() );
 		        System.out.println(origin.getId()+":"+destination.getId());

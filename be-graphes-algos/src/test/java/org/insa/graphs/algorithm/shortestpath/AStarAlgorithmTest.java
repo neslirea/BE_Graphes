@@ -52,10 +52,19 @@ public class AStarAlgorithmTest extends DijkstraAlgorithmTest{
 	        ShortestPathAlgorithm as_short = CreateAlgorithm(new ShortestPathData(graph, origin, destination, ai_short));	
 	        
 	        ShortestPathSolution sold_short = da_short.run();
+	        ShortestPathSolution sold_fast = da_fast.run();
 	        
 	        ShortestPathSolution solas_short = as_short.run();
+	        ShortestPathSolution solas_fast = as_fast.run();
+
+        	assertEquals(sold_short.isFeasible(), sold_fast.isFeasible());  	
+        	assertEquals(solas_short.isFeasible(), sold_short.isFeasible());  	
+        	assertEquals(solas_fast.isFeasible(), sold_fast.isFeasible());  	
+        	assertEquals(solas_short.isFeasible(), solas_fast.isFeasible());  	
+	        
 	        if (sold_short.isFeasible()){
 	        	assertTrue(sold_short.compareTo(solas_short)==0);  	
+	        	assertTrue(sold_fast.compareTo(solas_fast)==0);  	
 	        }
 	        
         }

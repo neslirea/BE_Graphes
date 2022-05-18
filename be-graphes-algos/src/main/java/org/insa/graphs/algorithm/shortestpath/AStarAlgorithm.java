@@ -37,8 +37,7 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
     		} else {
             	float distance = (float)Point.distance(graph.get(i).getPoint(), graph.get(destination).getPoint());
             	int speed = graph.getGraphInformation().getMaximumSpeed();
-            	cout_estime=(distance*(float)3.6/speed);
-        		System.out.println(cout_estime);
+            	cout_estime=distance*((float)3.6/speed);
     		}
     	}
     	return new LabelStar(i, false, infini, null, cout_estime);
